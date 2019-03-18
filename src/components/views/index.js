@@ -1,4 +1,4 @@
-import RecordVideoView from './RecordVideo';
+import RecordVideoView from './RecordVideo/index';
 import SendVideoView from './SendVideo';
 import VideoListView from './VideoList';
 
