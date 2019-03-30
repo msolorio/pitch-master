@@ -1,4 +1,5 @@
 import React from 'react';
+import VimeoUpload from './vimeo-upload';
 
 class RecordVideoView extends React.Component {
   constructor(props) {
@@ -9,13 +10,17 @@ class RecordVideoView extends React.Component {
     this.handleSaveClick = this.handleSaveClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
     this.getVideoRecordControls = this.getVideoRecordControls.bind(this);
+    this.handleSendToChange = this.handleSendToChange.bind(this);
 
     this.videoRef = React.createRef();
     this.recordedVideoRef = React.createRef();
     
+    // using React state to handle ui interactions limited to only this component
+    // Redux should be used for higher level data storage
     this.state = {
       videoRecorded: false,
-      videoRecording: false
+      videoRecording: false,
+      sendToValue: ''
     };
   }
 
@@ -63,7 +68,7 @@ class RecordVideoView extends React.Component {
         console.error(`error creating a media object: ${err}`);
       });
     } else {
-      console.log('getUserMedia not supported on your browser!');
+      console.log('Video recording is not supported on your browser. Please use Chrome.');
     }
   }
 
@@ -77,13 +82,24 @@ class RecordVideoView extends React.Component {
   }
 
   handleSaveClick() {
-    this.initializeMediaRecorder();
     this.setState({videoRecorded: false});
+
+    var uploader = new VimeoUpload({
+      file: this.blob,
+      token: "0000" // put the actual vimeo API key here
+    });
+    uploader.upload();
+
+    this.initializeMediaRecorder(); // without this the video will not reset to the record video view
+  }
+
+  handleSendToChange(e) {
+    this.setState({sendToValue: e.target.value});
   }
 
   handleDeleteClick() {
-    this.initializeMediaRecorder();
     this.setState({videoRecorded: false});
+    this.initializeMediaRecorder(); // without this the video will not reset to the record video view
   }
 
   getVideoRecordControls() {
@@ -116,6 +132,8 @@ class RecordVideoView extends React.Component {
             <label htmlFor="save">Save</label>
             <button name="save"
               onClick={this.handleSaveClick}/>
+              <label htmlFor="sendto">Send To: </label>
+            <input name="sendto" onChange={this.handleSendToChange} value={this.state.sendToValue} />
           </div>
           <div>
             <label htmlFor="delete">Delete</label>

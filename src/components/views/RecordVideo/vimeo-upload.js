@@ -19,17 +19,9 @@
  */
 
 ;
-(function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define([], function() {
-            return (root.VimeoUpload = factory())
-        })
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory()
-    } else {
-        root.VimeoUpload = factory()
-    }
-}(this, function() {
+
+// the original file has been updated to import properly into the RecordVideo/index.js file for Pitch Master app.
+export default (function() {
 
     // -------------------------------------------------------------------------
     // RetryHandler Class
@@ -464,4 +456,4 @@
     }
 
     return me
-}))
+}());
